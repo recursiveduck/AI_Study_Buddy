@@ -1,0 +1,143 @@
+#This is to help me learn how to view a prompt as a mini-program with a code mental framework. Not a string mental framework.
+#Input. Structure. Variables. Functions. Output.
+#Learning Python, AI, Git, and other course work.
+
+
+# Module 1 TK TK TK TK TK TK
+
+import dspy
+
+class MakeAPlusQuestion(dspy.Signature):
+    """Generate one CompTIA A+ Core 1 question."""
+    topic: str                          # e.g., "networking", "hardware", "troubleshooting"
+    difficulty: str                     # "easy" | "medium" | "hard"
+    constraints: str                    # format rules, e.g., "A–D options, single correct, brief explanation"
+
+    # The model must return *exactly* this schema:
+    question: str                       # one sentence or short scenario
+    options: list[str]                  # exactly 4 options
+    correct_letter: str                 # one of "A","B","C","D"
+    explanation: str                    # ≤60 words; why the answer is correct
+
+class QuestionWriter(dspy.Module):
+    def __init__(self):
+        super().__init__()
+        self.make = dspy.Predict(MakeAPlusQuestion)
+
+    def forward(self, topic, difficulty, constraints):
+        return self.make(topic=topic, difficulty=difficulty, constraints=constraints)
+
+# Module 2 TK TK TK TK TK TK
+
+
+class QuestionWriter(dspy.Module):
+    def __init__(self):
+        super().__init__()
+        self.make = dspy.Predict(MakeAPlusQuestion)
+
+    def forward(self, topic, difficulty, constraints):
+        return self.make(topic=topic, difficulty=difficulty, constraints=constraints)
+
+
+# Module 3 TK TK TK TK TK TK
+
+dev = [
+    dspy.Example(
+        topic="networking", difficulty="easy",
+        constraints="Return 4 options A–D; exactly one correct; short explanation.",
+        question="Which device assigns IP addresses via DHCP in a small office?",
+        options=["Switch", "Router", "Modem", "Access point"],
+        correct_letter="B",
+        explanation="SOHO routers commonly run the DHCP server."
+    ).with_inputs("topic","difficulty","constraints"),
+
+    dspy.Example(
+        topic="hardware", difficulty="easy",
+        constraints="A–D options; single correct; short explanation.",
+        question="What type of storage is MOST appropriate for the OS boot drive when you need fast startup?",
+        options=["5400 RPM HDD", "NVMe SSD", "External USB HDD", "Tape drive"],
+        correct_letter="B",
+        explanation="NVMe SSDs provide very low latency and high throughput."
+    ).with_inputs("topic","difficulty","constraints"),
+
+    dspy.Example(
+        topic="mobile devices", difficulty="medium",
+        constraints="A–D; single correct; short explanation.",
+        question="A user’s phone won’t join Wi-Fi after recent travel. Other devices connect fine. Which step FIRST?",
+        options=["Replace the SIM", "Forget and rejoin the SSID", "Reset router", "Disable cellular data"],
+        correct_letter="B",
+        explanation="Forgetting/rejoining clears bad credentials/cached settings."
+    ).with_inputs("topic","difficulty","constraints"),
+
+    dspy.Example(
+        topic="troubleshooting", difficulty="medium",
+        constraints="A–D; single correct; explanation ≤60 words.",
+        question="A desktop powers on but shows no display and emits 1 long, 2 short beeps. Likely cause?",
+        options=["GPU failure", "CPU overheating", "Bad PSU", "Corrupt OS"],
+        correct_letter="A",
+        explanation="Common beep codes indicate video adapter failure."
+    ).with_inputs("topic","difficulty","constraints"),
+
+    dspy.Example(
+        topic="virtualization/cloud", difficulty="medium",
+        constraints="A–D; single correct; short explanation.",
+        question="Which cloud model provides OS-level control but not the underlying hardware?",
+        options=["SaaS", "IaaS", "PaaS", "FaaS"],
+        correct_letter="B",
+        explanation="IaaS exposes VMs/OS control; hardware management stays with provider."
+    ).with_inputs("topic","difficulty","constraints"),
+
+    dspy.Example(
+        topic="security", difficulty="hard",
+        constraints="A–D; single correct; ≤60 words.",
+        question="Which control BEST mitigates rogue DHCP servers on a managed switch?",
+        options=["Port mirroring", "DHCP snooping", "QoS tagging", "RSTP"],
+        correct_letter="B",
+        explanation="DHCP snooping allows only trusted ports to serve DHCP."
+    ).with_inputs("topic","difficulty","constraints"),
+]
+
+
+# Module 4 TK TK TK TK TK TK
+
+def metric(pred, gold):
+    score = 0
+    # 1) Format checks
+    if isinstance(pred.options, list) and len(pred.options) == 4:
+        score += 0.25
+    if pred.correct_letter in {"A","B","C","D"}:
+        score += 0.25
+    if 0 < len(pred.explanation.split()) <= 60:
+        score += 0.25
+    # 2) Content match (optional in early stages):
+    #   If the gold provides the correct_letter, match it exactly.
+    if pred.correct_letter == gold.correct_letter:
+        score += 0.25
+    return score  # 0.0–1.0
+
+# Module 5 with MIPROv2 TK TK TK TK TK TK
+
+optimizer = dspy.optimize.MIPROv2(
+    metric=metric,
+    budget=60,                 # trials
+    max_bootstrapped_demos=6,  # few-shots it can pick/compose
+    init_temperature=1.0
+)
+
+program = QuestionWriter()
+optimized_program = optimizer.compile(program=program, trainset=dev, seed=7)
+
+
+# Module 6 TK TK TK TK TK TK
+
+out = optimized_program(
+    topic="networking",
+    difficulty="medium",
+    constraints="Return 4 options labeled A–D; exactly one correct; add a ≤60-word explanation."
+)
+print(out.question)
+print(list(zip(["A","B","C","D"], out.options)))
+print("Answer:", out.correct_letter)
+print("Why:", out.explanation)
+
+
