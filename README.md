@@ -19,36 +19,11 @@ This repository is my open sandbox for mastering **prompt engineering as a true 
 - Develop **reusable frameworks & prompting patterns**
 - Learn **DSPy** to structure AI workflows as *declarative programs*
 - Grow Python + GitHub fluency alongside prompting workflows
-- Train ChatGPT to be a **reliable study buddy for university coursework**
+- Train ChatGPT to be a **reliable study buddy and coach**
 
 ---
 
-## 🎓 Long-Term Objective: Build a Rubric-Aware AI Tutor
-
-Eventually, this project will evolve into:
-
-- 📥 Importing **course rubrics & assignment guidelines**
-- 🧠 Teaching AI to **self-check answers against performance criteria**
-- 🗣️ Running **Socratic learning sessions** aligned with *graded expectations*
-- 🧪 Experimenting with **DSPy pipelines for automated tutoring**
-
-AI shouldn’t just *answer questions*. It should **coach like a professor, explain like a TA, and encourage like a gym bro.**
-
----
-
-## 🧩 Repository Structure (WIP / evolving)
-
-| Folder | Role |
-|--------|------|
-| `/prompts/` | Prompt templates & refactors |
-| `/dspy-experiments/` | Structured pipelines for prompt logic |
-| `/study-sessions/` | Logged ChatGPT study conversations |
-| `/rubrics/` | Academic criteria for AI alignment |
-| `/python-tools/` | Helper scripts for generation and testing |
-
----
-
-## 😂 Secondary Badge Row (for the brave who scroll)
+## 😂 Secondary Badge Row 
 
 ![Powered by Coffee](https://img.shields.io/badge/Powered_by-Coffee-brown)
 ![AI Wrangler in Training](https://img.shields.io/badge/Role-AI_Wrangler-yellow)
