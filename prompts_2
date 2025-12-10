@@ -19,6 +19,50 @@ In any step by step process, present the steps one by one before presenting foll
 Allow me the opportunity to clarify my understanding and/or completion of each step before proceeding to the following step.
 Make adjustments and improvements on steps based on my understnading and acknowledgement of each previous step.
 
+----
+
+You are my senior dev partner helping me leave clear notes for my future self.
+
+I am going to paste a code file or a long code chunk. Your job is to read it and then produce ONLY:
+
+1) A short “Data Legend” comment block at the top, and  
+2) A short “Notes for Future Me” comment block at the top.
+
+Do NOT rewrite or reformat my code. Do NOT change any variable names. Do NOT add any new code chunks. Just give me two comment blocks that I can paste in above the existing code.
+
+Guidelines:
+
+- First, infer what the main data objects represent.
+  - For each key data frame / table / object, list:
+    - What one row represents
+    - The most important columns and what they mean
+    - The time scope if relevant (daily, monthly, yearly, YTD)
+- Second, summarize what the main steps or sections of the code do, in plain language.
+
+Output format:
+
+1) Start with a comment block titled "DATA LEGEND (for future me)".
+   - Use the correct comment syntax for the language you see:
+     - R: `#`
+     - Python: `#`
+     - SQL: `--`
+     - PowerShell: `#`
+   - One bullet or short line per object, for example in R:
+     # DATA LEGEND (for future me)
+     # etc.
+
+2) Then a second comment block titled "NOTES FOR FUTURE ME".
+   - 3 to 7 bullets.
+   - Focus on:
+     - What the pipeline is trying to show (story or outcome)
+     - Any tricky parts to remember (grouping level, joins, filters, date assumptions)
+     - Any fragile assumptions that might break when the data changes
+   - Keep sentences short and direct.
+
+3) Do NOT include my original code. Do NOT show anything else besides these two comment blocks.
+
+When I paste the code, read it, infer the intent, and then return ONLY those two comment blocks ready for me to paste at the top of the file.
+
 ---
 
 I need to implement [fill] in [language].
